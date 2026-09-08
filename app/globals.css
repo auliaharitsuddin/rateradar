@@ -1,26 +1,248 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   RateRadar design tokens
+   Style: Comparative Analysis Dashboard (ui-ux-pro-max)
+   Chart palettes validated with dataviz/validate_palette.js
+   ───────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces & ink */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --foreground: #0f1e3d;
+  --muted-fg: #4a5b7a;
+  --subtle-fg: #64748b;
+  --border: #dbeafe;
+  --border-strong: #bfd5f5;
+
+  /* Brand */
+  --primary: #1e40af;
+  --primary-hover: #1b3a9e;
+  --on-primary: #ffffff;
+  --secondary: #3b82f6;
+  --accent: #b45309;
+  --accent-soft: #fef3c7;
+  --ring: #1e40af;
+
+  /* Status (reserved — never reused as a series color) */
+  --good: #15803d;
+  --good-soft: #dcfce7;
+  --warning: #b45309;
+  --warning-soft: #fef3c7;
+  --critical: #b91c1c;
+  --critical-soft: #fee2e2;
+
+  /* Categorical series — light mode (validated: all checks pass) */
+  --series-1: #2563eb; /* Booking.com */
+  --series-2: #d97706; /* Agoda      */
+  --series-3: #0d9488; /* Traveloka  */
+  --series-4: #9333ea; /* tiket.com  */
+
+  /* Chart chrome */
+  --grid: #e2e8f0;
+  --axis: #94a3b8;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(15, 30, 61, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 30, 61, 0.08);
+  --shadow-lg: 0 12px 32px rgba(15, 30, 61, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #0b1220;
+    --surface: #131c2e;
+    --surface-2: #1a2438;
+    --foreground: #eaf1fb;
+    --muted-fg: #a7b8d4;
+    --subtle-fg: #8296b5;
+    --border: #24344f;
+    --border-strong: #33476a;
+
+    --primary: #3b82f6;
+    --primary-hover: #5b95f7;
+    --on-primary: #071020;
+    --secondary: #60a5fa;
+    --accent: #fbbf24;
+    --accent-soft: #3a2c0c;
+    --ring: #60a5fa;
+
+    --good: #4ade80;
+    --good-soft: #0d2b18;
+    --warning: #fbbf24;
+    --warning-soft: #3a2c0c;
+    --critical: #f87171;
+    --critical-soft: #3b1516;
+
+    /* Categorical series — dark mode (validated separately) */
+    --series-1: #3b82f6;
+    --series-2: #d97706;
+    --series-3: #0d9488;
+    --series-4: #a855f7;
+
+    --grid: #24344f;
+    --axis: #64748b;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  }
+}
+
+[data-theme="dark"] {
+  --background: #0b1220;
+  --surface: #131c2e;
+  --surface-2: #1a2438;
+  --foreground: #eaf1fb;
+  --muted-fg: #a7b8d4;
+  --subtle-fg: #8296b5;
+  --border: #24344f;
+  --border-strong: #33476a;
+
+  --primary: #3b82f6;
+  --primary-hover: #5b95f7;
+  --on-primary: #071020;
+  --secondary: #60a5fa;
+  --accent: #fbbf24;
+  --accent-soft: #3a2c0c;
+  --ring: #60a5fa;
+
+  --good: #4ade80;
+  --good-soft: #0d2b18;
+  --warning: #fbbf24;
+  --warning-soft: #3a2c0c;
+  --critical: #f87171;
+  --critical-soft: #3b1516;
+
+  --series-1: #3b82f6;
+  --series-2: #d97706;
+  --series-3: #0d9488;
+  --series-4: #a855f7;
+
+  --grid: #24344f;
+  --axis: #64748b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted-fg: var(--muted-fg);
+  --color-subtle-fg: var(--subtle-fg);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-critical: var(--critical);
+  --color-critical-soft: var(--critical-soft);
+
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+
+  --color-grid: var(--grid);
+  --color-axis: var(--axis);
+
+  --font-sans: var(--font-fira-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-fira-code), ui-monospace, monospace;
+
+  /* Density 7/10 — standard-dense spacing rhythm */
+  --spacing: 0.25rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Avoid iOS auto-zoom and keep base at 16px */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-fira-sans), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.55;
+  /* Never let a wide table/chart scroll the page sideways */
+  overflow-x: hidden;
+}
+
+/* Prices, deltas, axis ticks — prevent width jitter between values */
+.tnum {
+  font-family: var(--font-fira-code), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Visible focus ring on every interactive element (a11y priority 1) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Skip link — keyboard users reach main content without tabbing the nav */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: 8px;
+}
+
+/* Scrollbars inside data panes */
+.thin-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
