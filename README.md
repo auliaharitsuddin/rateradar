@@ -1,5 +1,7 @@
 # RateRadar
 
+**Live demo:** https://auliaharitsuddin.github.io/rateradar/ (static build, fully functional — search, hotel pages, and the Pro dashboard all run on the same pricing logic as the live app)
+
 A hotel-price meta-comparison web app for Indonesia. RateRadar shows the
 final, all-in price of the same hotel room across multiple OTAs
 (Booking.com, Agoda, Traveloka, tiket.com) side by side, so travelers don't
@@ -95,6 +97,8 @@ not fetched from any live external API.
 ---
 
 ## Bahasa Indonesia
+
+**Demo live:** https://auliaharitsuddin.github.io/rateradar/ (versi statis, berfungsi penuh — pencarian, halaman hotel, dan dashboard Pro semuanya berjalan dengan logika harga yang sama seperti aplikasi live)
 
 Aplikasi web pembanding harga hotel untuk Indonesia. RateRadar menampilkan
 harga akhir (all-in) dari kamar hotel yang sama di berbagai OTA
