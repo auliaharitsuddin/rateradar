@@ -1,6 +1,9 @@
 import { SOURCE_LIST, SOURCES, TAX_RATE } from "./sources";
 import { BASE_RATE, rand, randInt } from "./seed";
+import { OTA_URL } from "./external-link";
 import type { Hotel, Quote, SourceId } from "./types";
+
+const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
 
 /** Per-source pricing bias — mirrors how OTAs genuinely differ on the same room. */
 const SOURCE_BIAS: Record<SourceId, number> = {
@@ -108,6 +111,12 @@ export function normalise(displayed: number, sourceId: SourceId): { total: numbe
 }
 
 function buildDeepLink(sourceId: SourceId, hotel: Hotel, checkIn: string, checkOut: string, guests: number): string {
+  const aff = `rateradar-${sourceId}`;
+  // Static export (GitHub Pages) has no server to run the /go redirect, so the
+  // demo build links straight to the OTA instead of through our click-tracking hop.
+  if (STATIC_EXPORT) {
+    return OTA_URL[sourceId]({ hotel: hotel.name, checkIn, checkOut, aff });
+  }
   const q = new URLSearchParams({
     hotel: hotel.name,
     city: hotel.city,
@@ -115,7 +124,7 @@ function buildDeepLink(sourceId: SourceId, hotel: Hotel, checkIn: string, checkO
     checkOut,
     guests: String(guests),
     // In production this carries the real affiliate tag for the source.
-    aff: `rateradar-${sourceId}`,
+    aff,
   });
   return `/go/${sourceId}?${q.toString()}`;
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { SOURCES } from "@/lib/sources";
+import { OTA_URL } from "@/lib/external-link";
 import type { SourceId } from "@/lib/types";
 
 /**
@@ -8,16 +9,6 @@ import type { SourceId } from "@/lib/types";
  *
  * The app never takes payment and never books on the user's behalf — it refers.
  */
-const TARGETS: Record<SourceId, (q: URLSearchParams) => string> = {
-  booking: (q) =>
-    `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(q.get("hotel") ?? "")}&checkin=${q.get("checkIn") ?? ""}&checkout=${q.get("checkOut") ?? ""}&aid=${q.get("aff") ?? ""}`,
-  agoda: (q) =>
-    `https://www.agoda.com/search?q=${encodeURIComponent(q.get("hotel") ?? "")}&checkIn=${q.get("checkIn") ?? ""}&checkOut=${q.get("checkOut") ?? ""}&cid=${q.get("aff") ?? ""}`,
-  traveloka: (q) =>
-    `https://www.traveloka.com/en-id/hotel/search?q=${encodeURIComponent(q.get("hotel") ?? "")}&aff=${q.get("aff") ?? ""}`,
-  tiket: (q) =>
-    `https://www.tiket.com/hotel/search?q=${encodeURIComponent(q.get("hotel") ?? "")}&aff=${q.get("aff") ?? ""}`,
-};
 
 export async function GET(
   request: Request,
@@ -29,7 +20,12 @@ export async function GET(
   }
 
   const { searchParams } = new URL(request.url);
-  const target = TARGETS[source as SourceId](searchParams);
+  const target = OTA_URL[source as SourceId]({
+    hotel: searchParams.get("hotel") ?? "",
+    checkIn: searchParams.get("checkIn") ?? "",
+    checkOut: searchParams.get("checkOut") ?? "",
+    aff: searchParams.get("aff") ?? "",
+  });
 
   // Click attribution would be persisted here (source, hotel, timestamp, session).
   return NextResponse.redirect(target, { status: 302 });

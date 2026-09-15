@@ -1,31 +1,30 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import { defaultDates, resolveCitySlug, searchHotels } from "@/lib/query";
 import { SearchView } from "@/components/search-view";
 
-export const dynamic = "force-dynamic";
-
-interface Props {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}
-
-function first(v: string | string[] | undefined): string | undefined {
-  return Array.isArray(v) ? v[0] : v;
-}
-
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
 
-export default async function SearchPage({ searchParams }: Props) {
-  const sp = await searchParams;
+/**
+ * Client-side twin of the search page's server logic, used only in the static
+ * export build: `output: "export"` has no server to read the `?city=` query
+ * string at request time, so this reads it from the browser URL instead and
+ * re-runs the exact same deterministic pricing functions from lib/query.
+ */
+export function SearchClient() {
+  const sp = useSearchParams();
   const fallback = defaultDates();
 
-  const city = first(sp.city) ?? "Bali";
-  const rawIn = first(sp.checkIn);
-  const rawOut = first(sp.checkOut);
+  const city = sp.get("city") ?? "Bali";
+  const rawIn = sp.get("checkIn");
+  const rawOut = sp.get("checkOut");
   const checkIn = rawIn && ISO.test(rawIn) ? rawIn : fallback.checkIn;
   const checkOutCandidate = rawOut && ISO.test(rawOut) ? rawOut : fallback.checkOut;
-  // Guard against an out-of-order range arriving via a hand-edited URL.
-  const checkOut = checkOutCandidate > checkIn ? checkOutCandidate : fallback.checkOut > checkIn ? fallback.checkOut : checkIn;
+  const checkOut =
+    checkOutCandidate > checkIn ? checkOutCandidate : fallback.checkOut > checkIn ? fallback.checkOut : checkIn;
 
-  const guestsRaw = Number(first(sp.guests) ?? 2);
+  const guestsRaw = Number(sp.get("guests") ?? 2);
   const guests = Number.isInteger(guestsRaw) && guestsRaw >= 1 && guestsRaw <= 6 ? guestsRaw : 2;
 
   const known = resolveCitySlug(city);

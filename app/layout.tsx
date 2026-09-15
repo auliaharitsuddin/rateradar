@@ -50,6 +50,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="skip-link">
           Lompat ke konten utama
         </a>
+        {process.env.NEXT_PUBLIC_STATIC_EXPORT === "true" && (
+          <p className="bg-primary px-4 py-1.5 text-center text-xs font-medium text-on-primary">
+            Demo mode — showing sample data. This static build has no live backend; run the app
+            locally for real-time pricing.
+          </p>
+        )}
         <SiteNav />
         <main id="main" tabIndex={-1}>
           {children}
