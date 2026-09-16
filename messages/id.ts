@@ -1,0 +1,190 @@
+// Indonesian UI strings — the app's original language, kept as the default.
+const id = {
+  skipToContent: "Lompat ke konten utama",
+  demoBanner:
+    "Mode demo — menampilkan data contoh. Build statis ini tidak punya backend aktif; jalankan aplikasi secara lokal untuk harga real-time.",
+  footer: {
+    disclaimer:
+      "RateRadar adalah layanan pembanding harga. Kami tidak menerima pembayaran dan tidak memesan atas nama pengguna — setiap pemesanan diselesaikan di situs OTA terkait. Harga bersifat indikatif dan dapat berubah.",
+    copyright: (year: number) => `© ${year} RateRadar`,
+  },
+  nav: {
+    ariaLabel: "Navigasi utama",
+    homeAria: "RateRadar — beranda",
+    search: "Cari hotel",
+    pro: "RateRadar Pro",
+    themeToLight: "Ganti ke mode terang",
+    themeToDark: "Ganti ke mode gelap",
+    openMenu: "Buka menu",
+    closeMenu: "Tutup menu",
+    langSwitch: "Ganti bahasa",
+  },
+  home: {
+    badge: "Data dari 4 OTA · Bali, Jakarta, Bandung, Yogyakarta",
+    h1Line1: "Kamar yang sama, harga berbeda di tiap OTA.",
+    h1Line2: "Kami tunjukkan selisihnya.",
+    subtitle:
+      "RateRadar membandingkan harga akhir hotel lintas OTA lokal dan internasional. Kami tidak menjual kamar — Anda memesan langsung di OTA dengan harga terbaik.",
+    sourceLabel: "Sumber harga:",
+    linkOnly: "(tautan)",
+    previewLabel: "Selisih terbesar di Bali hari ini",
+    cheapestTag: "termurah",
+    spreadNote: (spread: string) => `Selisih ${spread} per malam untuk kamar yang sama.`,
+    howItWorks: "Cara kerjanya",
+    steps: [
+      {
+        title: "Satu pencarian, semua OTA",
+        body: "Kami menanyakan harga kamar yang sama ke Booking.com, Agoda, Traveloka dan tiket.com, lalu menyusunnya berdampingan.",
+      },
+      {
+        title: "Harga all-in, bukan jebakan pajak",
+        body: "Sebagian OTA memasang harga sebelum pajak dan service charge. Semua angka di sini sudah dinormalkan ke harga akhir agar adil dibandingkan.",
+      },
+      {
+        title: "Riwayat harga, bukan tebakan",
+        body: "Setiap pencarian menambah observasi harga, sehingga Anda tahu apakah harga hari ini benar-benar murah.",
+      },
+    ],
+    citiesTitle: "Kota yang dipantau",
+    properties: (n: string) => `${n} properti`,
+    proCrossSellTitle: "Punya properti sendiri?",
+    proCrossSellBody:
+      "RateRadar Pro memantau harga kompetitor di sekitar Anda dan mendeteksi saat sebuah OTA menjual kamar Anda di bawah harga dasar — pelanggaran rate parity yang menggerus penjualan langsung.",
+    proCrossSellCta: "Buka RateRadar Pro",
+  },
+  searchForm: {
+    cityLabel: "Kota tujuan",
+    checkInLabel: "Check-in",
+    checkOutLabel: "Check-out",
+    guestsLabel: "Tamu",
+    guestOption: (n: number) => `${n} tamu`,
+    dateError: "Tanggal check-out harus setelah check-in.",
+    searching: "Mencari…",
+    submit: "Bandingkan",
+  },
+  results: {
+    sortLabel: "Urutkan",
+    sortCheapest: "Harga termurah",
+    sortSavings: "Selisih terbesar",
+    sortRating: "Rating tertinggi",
+    starsLabel: "Bintang",
+    starsFilterAria: "Filter bintang minimum",
+    starsAll: "Semua",
+    properties: (n: number) => `${n} properti`,
+    filtered: " (difilter)",
+    emptyTitle: "Tidak ada properti yang cocok",
+    emptyBody: (minStars: number, city: string) =>
+      `Tidak ada hotel ${minStars}+ bintang di ${city} untuk tanggal ini. Longgarkan filter bintang untuk melihat lebih banyak pilihan.`,
+    resetFilter: "Tampilkan semua bintang",
+  },
+  hotelCard: {
+    starsAria: (n: number) => `${n} bintang`,
+    reviews: (n: string) => `${n} ulasan`,
+    priceHeader: (n: number) => `Harga all-in per malam · ${n} sumber`,
+    compareSummary: (hotel: string, n: number, source: string, price: string) =>
+      `Perbandingan harga ${hotel} di ${n} OTA, termurah ${source} ${price} per malam.`,
+    saveVs: (spread: string) => `Hemat ${spread} vs sumber termahal`,
+    cheapestAt: (source: string) => `Termurah di ${source}`,
+    total: (total: string, nights: number) => `Total ${total} · ${nights} malam`,
+    viewAt: (source: string) => `Lihat di ${source}`,
+    priceHistory: "Riwayat harga",
+    roomsLeft: (n: number) => `Tersisa ${n} kamar`,
+  },
+  searchView: {
+    cityNotTracked: (city: string) => `Kota “${city}” belum dipantau`,
+    notTrackedBody:
+      "Saat ini RateRadar memantau Bali, Jakarta, Bandung, dan Yogyakarta. Pilih salah satu di atas untuk melihat perbandingan harga.",
+    backHome: "Kembali ke beranda",
+    hotelsIn: (city: string) => `Hotel di ${city}`,
+    dateSummary: (checkIn: string, checkOut: string, nights: number, guests: number) =>
+      `${checkIn} → ${checkOut} · ${nights} malam · ${guests} tamu`,
+    sourcesFailed: (names: string) =>
+      `Sumber tidak merespons: ${names}. Perbandingan ditampilkan dari sumber yang tersedia.`,
+  },
+  hotelView: {
+    breadcrumbAria: "Breadcrumb",
+    home: "Beranda",
+    bookAt: (source: string, price: string) => `Pesan di ${source} · ${price}`,
+    starsAria: (n: number) => `${n} bintang`,
+    ratingReviews: (rating: string, reviews: string) => `${rating}/10 · ${reviews} ulasan`,
+    statCheapestToday: "Termurah hari ini",
+    statAvg30: "Rata-rata 30 hari",
+    statAvgDeltaLabel: "harga hari ini vs rata-rata",
+    statLowest: "Terendah tercatat",
+    statHighest: "Tertinggi tercatat",
+    last30Days: "Dalam 30 hari terakhir",
+    priceHistory30: "Riwayat harga 30 hari",
+    priceHistoryBody:
+      "Harga all-in per malam untuk 1 kamar, 2 tamu. Celah pada garis berarti sumber tidak mengembalikan harga hari itu.",
+    chartSummary: (hotel: string, n: number, lowest: string, highest: string, average: string) =>
+      `Riwayat harga ${hotel} selama 30 hari di ${n} OTA. Terendah ${lowest}, tertinggi ${highest}, rata-rata ${average}.`,
+    pricePerOta: "Harga per OTA",
+    oneNight: (date: string) => `${date} · 1 malam`,
+    compareSummary: (n: number, hotel: string) => `Perbandingan ${n} OTA untuk ${hotel}.`,
+    chooseSaves: (cheap: string, amount: string, dear: string) =>
+      `Memilih ${cheap} menghemat ${amount} per malam dibanding ${dear}.`,
+    priceBreakdown: "Rincian harga",
+    displayed: (price: string) => `Tampil ${price}`,
+    plusTax: (amount: string) => ` + pajak & layanan ${amount}`,
+    taxIncluded: " (sudah termasuk pajak)",
+    refundable: "Bisa dibatalkan",
+    nonRefundable: "Non-refundable",
+  },
+  proView: {
+    label: "RateRadar Pro",
+    rateIntel30: (city: string) => `${city} · rate intelligence 30 hari terakhir`,
+    adrYours: "ADR properti Anda",
+    adrDeltaLabel: (days: number) => `paruh akhir vs awal ${days} hari`,
+    avgDailyPrice: "Rata-rata harga harian",
+    marketAdr: (days: number) => `ADR pasar (${days} hari)`,
+    vsMarketLabel: "posisi Anda vs pasar",
+    marketHint: (n: number, stars: number) => `Median ${n} kompetitor ${stars}★ sekitar`,
+    rank: "Peringkat harga",
+    rankValue: (rank: number, total: number) => `#${rank} dari ${total}`,
+    rankHint: "1 = termurah di competitive set",
+    parityViolations: "Pelanggaran parity",
+    vs14Days: "vs 14 hari sebelumnya",
+    criticalCount: (n: number) => `${n} berstatus kritis`,
+    noCritical: "Tidak ada yang kritis",
+    yourPriceEachOta: "Harga kamar Anda di tiap OTA",
+    trendBody: "Garis yang menyimpang ke bawah menandakan sebuah OTA menjual di bawah harga dasar Anda.",
+    trendSummary: (property: string, n: number, adr: string, issues: number) =>
+      `Harga ${property} selama 30 hari di ${n} OTA. ADR ${adr}, ${issues} pelanggaran rate parity terdeteksi.`,
+    competitiveSet: "Competitive set",
+    competitiveSetBody: (days: number, stars: number) =>
+      `ADR ${days} hari untuk kompetitor ${stars}★ terdekat — basis waktu yang sama dengan ADR Anda. Median dihitung dari OTA yang memuat properti tersebut.`,
+    ratePairty: "Rate parity",
+    parityBody: (floor: string) => `OTA yang menjual di bawah harga dasar ${floor}.`,
+    parityOk: "Parity terjaga",
+    parityOkBody: "Tidak ada OTA yang menjual di bawah harga dasar dalam 14 hari terakhir.",
+    critical: "Kritis",
+    warning: "Perhatian",
+    issueSummary: (date: string, price: string, pct: string) => `${date} · jual ${price} (${pct})`,
+    notFound: "Properti tidak ditemukan",
+  },
+  competitorTable: {
+    empty: "Belum ada kompetitor terpantau di sekitar properti ini.",
+    caption: (name: string, adr: string) =>
+      `Harga median kompetitor di sekitar ${name}, dibandingkan dengan ADR Anda ${adr}.`,
+    colProperty: "Properti",
+    colDistance: "Jarak",
+    colMedian: "Median",
+    colVsYou: "vs Anda",
+    youTag: "ANDA",
+    km: (n: number) => `${n} km`,
+  },
+  propertyPicker: {
+    label: "Properti",
+  },
+  trendChart: {
+    noDataTitle: "Belum ada data harga",
+    noDataBody: "Data muncul setelah observasi pertama terkumpul.",
+    hideTable: "Sembunyikan tabel",
+    showTable: "Lihat tabel",
+    dateCol: "Tanggal",
+  },
+  readme: {},
+};
+
+export default id;
+export type Messages = typeof id;

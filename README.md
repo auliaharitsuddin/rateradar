@@ -61,6 +61,11 @@ competitor pricing and rate-parity breaches.
 - **Reusable chart components**: `TrendChart` (multi-series line chart),
   `CompareBars`, `StatTile` (KPI card with delta), `CompetitorTable`,
   `PropertyPicker`, `SearchForm`, `ResultsList`, `HotelCard`.
+- **Indonesian/English language toggle** (`lib/language.tsx`, `messages/`)
+  in the header, persisted in `localStorage`. Covers the nav, footer, demo
+  banner, and the home page. The Search, Hotel detail, and Pro dashboard
+  pages don't read from it yet and still show Indonesian text regardless
+  of the toggle.
 
 ## Terminology
 
@@ -161,6 +166,11 @@ pemilik hotel untuk memantau harga kompetitor dan pelanggaran rate parity.
   multi-seri), `CompareBars`, `StatTile` (kartu KPI dengan delta),
   `CompetitorTable`, `PropertyPicker`, `SearchForm`, `ResultsList`,
   `HotelCard`.
+- **Toggle bahasa Indonesia/Inggris** (`lib/language.tsx`, `messages/`) di
+  header, tersimpan di `localStorage`. Mencakup nav, footer, banner demo,
+  dan halaman beranda. Halaman Search, Detail Hotel, dan dashboard Pro
+  belum membaca setting ini dan masih tampil dalam Bahasa Indonesia apa
+  pun pilihan togglenya.
 
 ## Istilah
 

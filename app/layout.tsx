@@ -2,6 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Fira_Sans, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site-nav";
+import { LanguageProvider } from "@/lib/language";
+import { Footer } from "@/components/footer";
+import { SkipLink } from "@/components/skip-link";
+import { DemoBanner } from "@/components/demo-banner";
 
 const firaSans = Fira_Sans({
   variable: "--font-fira-sans",
@@ -47,29 +51,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${firaSans.variable} ${firaCode.variable} antialiased`}>
-        <a href="#main" className="skip-link">
-          Lompat ke konten utama
-        </a>
-        {process.env.NEXT_PUBLIC_STATIC_EXPORT === "true" && (
-          <p className="bg-primary px-4 py-1.5 text-center text-xs font-medium text-on-primary">
-            Demo mode — showing sample data. This static build has no live backend; run the app
-            locally for real-time pricing.
-          </p>
-        )}
-        <SiteNav />
-        <main id="main" tabIndex={-1}>
-          {children}
-        </main>
-        <footer className="border-t border-border mt-16 bg-surface">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 py-8 text-sm text-subtle-fg">
-            <p className="max-w-3xl">
-              RateRadar adalah layanan pembanding harga. Kami tidak menerima pembayaran dan tidak
-              memesan atas nama pengguna — setiap pemesanan diselesaikan di situs OTA terkait.
-              Harga bersifat indikatif dan dapat berubah.
-            </p>
-            <p className="mt-3">© {new Date().getFullYear()} RateRadar</p>
-          </div>
-        </footer>
+        <LanguageProvider>
+          <SkipLink />
+          <DemoBanner />
+          <SiteNav />
+          <main id="main" tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

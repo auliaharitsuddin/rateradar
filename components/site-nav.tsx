@@ -5,11 +5,8 @@ import { usePathname } from "next/navigation";
 import { useCallback, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChartIcon, CloseIcon, MenuIcon, MoonIcon, RadarIcon, SearchIcon, SunIcon } from "./icons";
-
-const LINKS = [
-  { href: "/", label: "Cari hotel", Icon: SearchIcon },
-  { href: "/pro", label: "RateRadar Pro", Icon: ChartIcon },
-];
+import { useLanguage } from "@/lib/language";
+import { LangToggle } from "./lang-toggle";
 
 const THEME_EVENT = "rr-theme-change";
 
@@ -35,6 +32,7 @@ function readTheme(): "light" | "dark" {
 }
 
 function ThemeToggle() {
+  const { t } = useLanguage();
   // On the server the theme is unknowable; light is the documented default and
   // the client re-reads immediately after hydration.
   const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as const);
@@ -55,7 +53,7 @@ function ThemeToggle() {
       type="button"
       onClick={toggle}
       className="grid h-11 w-11 cursor-pointer place-items-center rounded-lg text-muted-fg transition-colors duration-200 hover:bg-surface-2 hover:text-foreground"
-      aria-label={theme === "dark" ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
+      aria-label={theme === "dark" ? t.nav.themeToLight : t.nav.themeToDark}
     >
       {theme === "dark" ? <MoonIcon /> : <SunIcon />}
     </button>
@@ -63,20 +61,26 @@ function ThemeToggle() {
 }
 
 export function SiteNav() {
+  const { t } = useLanguage();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const LINKS = [
+    { href: "/", label: t.nav.search, Icon: SearchIcon },
+    { href: "/pro", label: t.nav.pro, Icon: ChartIcon },
+  ];
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur-md">
       <nav
-        aria-label="Navigasi utama"
+        aria-label={t.nav.ariaLabel}
         className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6"
       >
         <Link
           href="/"
-          aria-label="RateRadar — beranda"
+          aria-label={t.nav.homeAria}
           className="flex h-11 shrink-0 items-center gap-2 font-semibold tracking-tight text-foreground"
         >
           <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-on-primary">
@@ -109,17 +113,19 @@ export function SiteNav() {
               </Link>
             );
           })}
+          <LangToggle />
           <ThemeToggle />
         </div>
 
         <div className="ml-auto flex items-center gap-1 sm:hidden">
+          <LangToggle />
           <ThemeToggle />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
-            aria-label={open ? "Tutup menu" : "Buka menu"}
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
             className="grid h-11 w-11 cursor-pointer place-items-center rounded-lg text-muted-fg transition-colors duration-200 hover:bg-surface-2 hover:text-foreground"
           >
             {open ? <CloseIcon /> : <MenuIcon />}

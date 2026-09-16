@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { SearchForm } from "@/components/search-form";
 import { defaultDates, searchHotels } from "@/lib/query";
@@ -5,27 +7,14 @@ import { CITIES } from "@/lib/seed";
 import { SOURCE_LIST, SOURCES, seriesVar } from "@/lib/sources";
 import { ChartIcon, CheckIcon, RadarIcon, ShieldIcon } from "@/components/icons";
 import { idr, num } from "@/lib/format";
+import { useLanguage } from "@/lib/language";
 
-const STEPS = [
-  {
-    Icon: RadarIcon,
-    title: "Satu pencarian, semua OTA",
-    body: "Kami menanyakan harga kamar yang sama ke Booking.com, Agoda, Traveloka dan tiket.com, lalu menyusunnya berdampingan.",
-  },
-  {
-    Icon: ShieldIcon,
-    title: "Harga all-in, bukan jebakan pajak",
-    body: "Sebagian OTA memasang harga sebelum pajak dan service charge. Semua angka di sini sudah dinormalkan ke harga akhir agar adil dibandingkan.",
-  },
-  {
-    Icon: ChartIcon,
-    title: "Riwayat harga, bukan tebakan",
-    body: "Setiap pencarian menambah observasi harga, sehingga Anda tahu apakah harga hari ini benar-benar murah.",
-  },
-];
+const STEP_ICONS = [RadarIcon, ShieldIcon, ChartIcon];
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const { checkIn, checkOut } = defaultDates();
+  const STEPS = t.home.steps.map((s, i) => ({ ...s, Icon: STEP_ICONS[i] }));
 
   // Live preview: the Bali offer with the widest gap between OTAs right now.
   const preview = searchHotels({ city: "Bali", checkIn, checkOut, guests: 2, rooms: 1 }).offers.sort(
@@ -41,20 +30,17 @@ export default function HomePage() {
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">
               <CheckIcon size={13} />
-              Data dari 4 OTA · Bali, Jakarta, Bandung, Yogyakarta
+              {t.home.badge}
             </span>
             <h1 className="mt-4 text-3xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-              Kamar yang sama, harga berbeda di tiap OTA.
-              <span className="block text-primary">Kami tunjukkan selisihnya.</span>
+              {t.home.h1Line1}
+              <span className="block text-primary">{t.home.h1Line2}</span>
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-muted-fg">
-              RateRadar membandingkan harga akhir hotel lintas OTA lokal dan internasional.
-              Kami tidak menjual kamar — Anda memesan langsung di OTA dengan harga terbaik.
-            </p>
+            <p className="mt-4 text-base leading-relaxed text-muted-fg">{t.home.subtitle}</p>
 
             {/* Source strip */}
             <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <span className="text-xs font-medium text-subtle-fg">Sumber harga:</span>
+              <span className="text-xs font-medium text-subtle-fg">{t.home.sourceLabel}</span>
               {SOURCE_LIST.map((s) => (
                 <span
                   key={s.id}
@@ -67,7 +53,7 @@ export default function HomePage() {
                   />
                   {s.name}
                   {!s.hasPriceApi && (
-                    <span className="text-[10px] font-normal text-subtle-fg">(tautan)</span>
+                    <span className="text-[10px] font-normal text-subtle-fg">{t.home.linkOnly}</span>
                   )}
                 </span>
               ))}
@@ -78,7 +64,7 @@ export default function HomePage() {
           {preview && (
             <div className="rounded-2xl border border-border bg-surface-2/60 p-4 sm:p-5">
               <p className="text-xs font-semibold uppercase tracking-wide text-subtle-fg">
-                Selisih terbesar di Bali hari ini
+                {t.home.previewLabel}
               </p>
               <p className="mt-2 text-sm font-semibold text-foreground">{preview.hotel.name}</p>
               <p className="text-xs text-subtle-fg">{preview.hotel.area}</p>
@@ -101,7 +87,7 @@ export default function HomePage() {
                         className="tnum w-20 shrink-0 text-right text-xs font-medium"
                         style={{ color: premium === 0 ? "var(--good)" : "var(--subtle-fg)" }}
                       >
-                        {premium === 0 ? "termurah" : `+${idr(premium)}`}
+                        {premium === 0 ? t.home.cheapestTag : `+${idr(premium)}`}
                       </span>
                     </li>
                   );
@@ -109,7 +95,7 @@ export default function HomePage() {
               </ul>
 
               <p className="mt-4 rounded-lg bg-good-soft px-3 py-2 text-xs font-semibold text-good">
-                Selisih {idr(preview.spread)} per malam untuk kamar yang sama.
+                {t.home.spreadNote(idr(preview.spread))}
               </p>
             </div>
           )}
@@ -124,7 +110,7 @@ export default function HomePage() {
       {/* How it works */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14">
         <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          Cara kerjanya
+          {t.home.howItWorks}
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {STEPS.map(({ Icon, title, body }) => (
@@ -142,7 +128,7 @@ export default function HomePage() {
       {/* Cities */}
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6">
         <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-          Kota yang dipantau
+          {t.home.citiesTitle}
         </h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {CITIES.map((c) => (
@@ -154,7 +140,7 @@ export default function HomePage() {
               <p className="text-base font-semibold text-foreground group-hover:text-primary">
                 {c.label}
               </p>
-              <p className="tnum mt-1 text-xs text-subtle-fg">{num(c.properties)} properti</p>
+              <p className="tnum mt-1 text-xs text-subtle-fg">{t.home.properties(num(c.properties))}</p>
             </Link>
           ))}
         </div>
@@ -164,19 +150,15 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 pb-14 sm:px-6">
         <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
-            <h2 className="text-lg font-semibold text-foreground">Punya properti sendiri?</h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-fg">
-              RateRadar Pro memantau harga kompetitor di sekitar Anda dan mendeteksi saat sebuah OTA
-              menjual kamar Anda di bawah harga dasar — pelanggaran rate parity yang menggerus
-              penjualan langsung.
-            </p>
+            <h2 className="text-lg font-semibold text-foreground">{t.home.proCrossSellTitle}</h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-fg">{t.home.proCrossSellBody}</p>
           </div>
           <Link
             href="/pro"
             className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-foreground px-6 text-sm font-semibold text-background transition-opacity duration-200 hover:opacity-90 cursor-pointer"
           >
             <ChartIcon size={18} />
-            Buka RateRadar Pro
+            {t.home.proCrossSellCta}
           </Link>
         </div>
       </section>
