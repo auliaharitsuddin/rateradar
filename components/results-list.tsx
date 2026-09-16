@@ -4,14 +4,9 @@ import { useMemo, useState } from "react";
 import type { HotelOffer } from "@/lib/types";
 import { HotelCard } from "./hotel-card";
 import { SearchIcon } from "./icons";
+import { useLanguage } from "@/lib/language";
 
 type SortKey = "cheapest" | "savings" | "rating";
-
-const SORTS: { key: SortKey; label: string }[] = [
-  { key: "cheapest", label: "Harga termurah" },
-  { key: "savings", label: "Selisih terbesar" },
-  { key: "rating", label: "Rating tertinggi" },
-];
 
 const STAR_FILTERS = [0, 3, 4, 5];
 
@@ -24,8 +19,15 @@ export function ResultsList({
   nights: number;
   city: string;
 }) {
+  const { t } = useLanguage();
   const [sort, setSort] = useState<SortKey>("cheapest");
   const [minStars, setMinStars] = useState(0);
+
+  const SORTS: { key: SortKey; label: string }[] = [
+    { key: "cheapest", label: t.results.sortCheapest },
+    { key: "savings", label: t.results.sortSavings },
+    { key: "rating", label: t.results.sortRating },
+  ];
 
   const visible = useMemo(() => {
     const filtered = offers.filter((o) => o.hotel.stars >= minStars);
@@ -41,13 +43,13 @@ export function ResultsList({
       {/* Filters in one row above the results */}
       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-border bg-surface px-4 py-3">
         <p className="tnum text-sm font-medium text-foreground">
-          {visible.length} properti
-          {minStars > 0 && <span className="font-normal text-subtle-fg"> (difilter)</span>}
+          {t.results.properties(visible.length)}
+          {minStars > 0 && <span className="font-normal text-subtle-fg">{t.results.filtered}</span>}
         </p>
 
         <div className="flex items-center gap-2">
           <label htmlFor="sort" className="text-xs font-medium text-muted-fg">
-            Urutkan
+            {t.results.sortLabel}
           </label>
           <select
             id="sort"
@@ -64,8 +66,8 @@ export function ResultsList({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-fg">Bintang</span>
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter bintang minimum">
+          <span className="text-xs font-medium text-muted-fg">{t.results.starsLabel}</span>
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label={t.results.starsFilterAria}>
             {STAR_FILTERS.map((s) => (
               <button
                 key={s}
@@ -78,7 +80,7 @@ export function ResultsList({
                     : "border-border text-muted-fg hover:bg-surface-2 hover:text-foreground"
                 }`}
               >
-                {s === 0 ? "Semua" : `${s}+`}
+                {s === 0 ? t.results.starsAll : `${s}+`}
               </button>
             ))}
           </div>
@@ -91,18 +93,17 @@ export function ResultsList({
             <SearchIcon size={22} />
           </span>
           <h2 className="mt-4 text-base font-semibold text-foreground">
-            Tidak ada properti yang cocok
+            {t.results.emptyTitle}
           </h2>
           <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-fg">
-            Tidak ada hotel {minStars}+ bintang di {city} untuk tanggal ini. Longgarkan filter
-            bintang untuk melihat lebih banyak pilihan.
+            {t.results.emptyBody(minStars, city)}
           </p>
           <button
             type="button"
             onClick={() => setMinStars(0)}
             className="mt-5 h-11 rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary-hover cursor-pointer"
           >
-            Tampilkan semua bintang
+            {t.results.resetFilter}
           </button>
         </div>
       ) : (

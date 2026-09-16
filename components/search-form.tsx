@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { CalendarIcon, MapPinIcon, SearchIcon, UsersIcon } from "./icons";
+import { useLanguage } from "@/lib/language";
 
 const CITY_OPTIONS = ["Bali", "Jakarta", "Bandung", "Yogyakarta"];
 
@@ -25,6 +26,7 @@ export function SearchForm({
 }: Props) {
   const router = useRouter();
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
 
   const [city, setCity] = useState(initialCity);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
@@ -36,7 +38,7 @@ export function SearchForm({
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (checkOut <= checkIn) {
-      setError("Tanggal check-out harus setelah check-in.");
+      setError(t.searchForm.dateError);
       return;
     }
     setError(null);
@@ -60,7 +62,7 @@ export function SearchForm({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_0.9fr_auto]">
         <div>
           <label htmlFor="city" className={labelCls}>
-            Kota tujuan
+            {t.searchForm.cityLabel}
           </label>
           <div className="relative">
             <MapPinIcon
@@ -84,7 +86,7 @@ export function SearchForm({
 
         <div>
           <label htmlFor="checkIn" className={labelCls}>
-            Check-in
+            {t.searchForm.checkInLabel}
           </label>
           <div className="relative">
             <CalendarIcon
@@ -110,7 +112,7 @@ export function SearchForm({
 
         <div>
           <label htmlFor="checkOut" className={labelCls}>
-            Check-out
+            {t.searchForm.checkOutLabel}
           </label>
           <div className="relative">
             <CalendarIcon
@@ -132,7 +134,7 @@ export function SearchForm({
 
         <div>
           <label htmlFor="guests" className={labelCls}>
-            Tamu
+            {t.searchForm.guestsLabel}
           </label>
           <div className="relative">
             <UsersIcon
@@ -147,7 +149,7 @@ export function SearchForm({
             >
               {[1, 2, 3, 4, 5, 6].map((g) => (
                 <option key={g} value={g}>
-                  {g} tamu
+                  {t.searchForm.guestOption(g)}
                 </option>
               ))}
             </select>
@@ -166,12 +168,12 @@ export function SearchForm({
                   aria-hidden
                   className="h-4 w-4 animate-spin rounded-full border-2 border-on-primary/40 border-t-on-primary"
                 />
-                Mencari…
+                {t.searchForm.searching}
               </>
             ) : (
               <>
                 <SearchIcon size={18} />
-                Bandingkan
+                {t.searchForm.submit}
               </>
             )}
           </button>

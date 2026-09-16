@@ -2,14 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import type { Hotel } from "@/lib/types";
+import { useLanguage } from "@/lib/language";
 
 export function PropertyPicker({ hotels, current }: { hotels: Hotel[]; current: string }) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   return (
     <div className="flex items-center gap-2">
       <label htmlFor="property" className="whitespace-nowrap text-xs font-medium text-muted-fg">
-        Properti
+        {t.propertyPicker.label}
       </label>
       <select
         id="property"

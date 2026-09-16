@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { SearchForm } from "@/components/search-form";
 import { ResultsList } from "@/components/results-list";
 import { SOURCES } from "@/lib/sources";
 import { longDate } from "@/lib/format";
 import { AlertIcon, SearchIcon } from "@/components/icons";
+import { useLanguage } from "@/lib/language";
 import type { SearchResponse } from "@/lib/types";
 
 /**
@@ -28,6 +31,7 @@ export function SearchView({
   guests: number;
   result: SearchResponse | null;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
       <SearchForm
@@ -44,27 +48,26 @@ export function SearchView({
             <SearchIcon size={22} />
           </span>
           <h1 className="mt-4 text-lg font-semibold text-foreground">
-            Kota &ldquo;{city}&rdquo; belum dipantau
+            {t.searchView.cityNotTracked(city)}
           </h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-fg">
-            Saat ini RateRadar memantau Bali, Jakarta, Bandung, dan Yogyakarta. Pilih salah satu di
-            atas untuk melihat perbandingan harga.
+            {t.searchView.notTrackedBody}
           </p>
           <Link
             href="/"
             className="mt-5 inline-flex h-11 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary hover:bg-primary-hover cursor-pointer"
           >
-            Kembali ke beranda
+            {t.searchView.backHome}
           </Link>
         </div>
       ) : (
         <>
           <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-              Hotel di {city}
+              {t.searchView.hotelsIn(city)}
             </h1>
             <p className="tnum text-sm text-subtle-fg">
-              {longDate(checkIn)} → {longDate(checkOut)} · {result.nights} malam · {guests} tamu
+              {t.searchView.dateSummary(longDate(checkIn), longDate(checkOut), result.nights, guests)}
             </p>
           </div>
 
@@ -76,9 +79,7 @@ export function SearchView({
             >
               <AlertIcon size={15} className="mt-px shrink-0" />
               <span>
-                Sumber tidak merespons:{" "}
-                {result.sourcesFailed.map((id) => SOURCES[id].name).join(", ")}. Perbandingan
-                ditampilkan dari sumber yang tersedia.
+                {t.searchView.sourcesFailed(result.sourcesFailed.map((id) => SOURCES[id].name).join(", "))}
               </span>
             </p>
           )}

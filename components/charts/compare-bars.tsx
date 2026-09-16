@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { idr } from "@/lib/format";
+import { useLanguage } from "@/lib/language";
 
 export interface CompareItem {
   id: string;
@@ -29,6 +30,7 @@ interface Props {
  */
 export function CompareBars({ items, summary }: Props) {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
 
   const cheapest = Math.min(...items.map((i) => i.value));
   const premiums = items.map((i) => i.value - cheapest);
@@ -52,7 +54,7 @@ export function CompareBars({ items, summary }: Props) {
                 <span className="text-sm font-medium text-foreground">{item.label}</span>
                 {isCheapest && (
                   <span className="rounded-full bg-good-soft px-2 py-0.5 text-[11px] font-semibold text-good">
-                    Termurah
+                    {t.compareBars.cheapestBadge}
                   </span>
                 )}
                 {item.note && <span className="text-xs text-subtle-fg">{item.note}</span>}
@@ -82,7 +84,7 @@ export function CompareBars({ items, summary }: Props) {
                   className="tnum w-24 shrink-0 text-right text-xs font-medium"
                   style={{ color: isCheapest ? "var(--good)" : "var(--muted-fg)" }}
                 >
-                  {isCheapest ? "termurah" : `+${idr(premium)}`}
+                  {isCheapest ? t.home.cheapestTag : `+${idr(premium)}`}
                 </span>
               </div>
             </li>

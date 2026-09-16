@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useMeasure } from "./use-measure";
 import { axisDate, idrCompact, idr, longDate } from "@/lib/format";
 import { TableIcon } from "@/components/icons";
+import { useLanguage } from "@/lib/language";
 
 export interface TrendSeries {
   id: string;
@@ -41,6 +42,7 @@ function niceScale(min: number, max: number, ticks = 4) {
 }
 
 export function TrendChart({ dates, series, height = 280, summary }: Props) {
+  const { t } = useLanguage();
   const { ref, width } = useMeasure<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const [showTable, setShowTable] = useState(false);
@@ -99,8 +101,8 @@ export function TrendChart({ dates, series, height = 280, summary }: Props) {
         style={{ height }}
       >
         <div className="text-center px-4">
-          <p className="font-medium text-muted-fg">Belum ada data harga</p>
-          <p className="mt-1">Data muncul setelah observasi pertama terkumpul.</p>
+          <p className="font-medium text-muted-fg">{t.trendChart.noDataTitle}</p>
+          <p className="mt-1">{t.trendChart.noDataBody}</p>
         </div>
       </div>
     );
@@ -127,7 +129,7 @@ export function TrendChart({ dates, series, height = 280, summary }: Props) {
           className="ml-auto flex h-11 cursor-pointer items-center gap-1.5 rounded-md px-3 text-xs font-medium text-subtle-fg transition-colors duration-200 hover:bg-surface-2 hover:text-foreground"
         >
           <TableIcon size={14} />
-          {showTable ? "Sembunyikan tabel" : "Lihat tabel"}
+          {showTable ? t.trendChart.hideTable : t.trendChart.showTable}
         </button>
       </div>
 
@@ -272,7 +274,7 @@ export function TrendChart({ dates, series, height = 280, summary }: Props) {
             <caption className="sr-only">{summary}</caption>
             <thead className="sticky top-0 bg-surface-2 text-muted-fg">
               <tr>
-                <th scope="col" className="px-3 py-2 font-medium">Tanggal</th>
+                <th scope="col" className="px-3 py-2 font-medium">{t.trendChart.dateCol}</th>
                 {series.map((s) => (
                   <th key={s.id} scope="col" className="px-3 py-2 text-right font-medium">
                     {s.label}

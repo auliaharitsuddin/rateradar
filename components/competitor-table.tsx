@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { CompetitorRow, SourceId } from "@/lib/types";
 import { SOURCE_LIST, seriesVar } from "@/lib/sources";
 import { idr } from "@/lib/format";
+import { useLanguage } from "@/lib/language";
 
 type SortKey = "name" | "distanceKm" | "median" | "vsYou";
 type Dir = "asc" | "desc";
@@ -17,6 +18,7 @@ export function CompetitorTable({
   propertyName: string;
   adr: number;
 }) {
+  const { t } = useLanguage();
   const [key, setKey] = useState<SortKey>("distanceKm");
   const [dir, setDir] = useState<Dir>("asc");
 
@@ -54,7 +56,7 @@ export function CompetitorTable({
   if (rows.length === 0) {
     return (
       <p className="rounded-lg border border-dashed border-border bg-surface-2 px-4 py-8 text-center text-sm text-subtle-fg">
-        Belum ada kompetitor terpantau di sekitar properti ini.
+        {t.competitorTable.empty}
       </p>
     );
   }
@@ -64,18 +66,18 @@ export function CompetitorTable({
     <div className="thin-scroll -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
       <table className="w-full min-w-[46rem] border-collapse text-sm">
         <caption className="sr-only">
-          Harga median kompetitor di sekitar {propertyName}, dibandingkan dengan ADR Anda {idr(adr)}.
+          {t.competitorTable.caption(propertyName, idr(adr))}
         </caption>
         <thead>
           <tr className="border-b border-border">
             <th scope="col" className={th} aria-sort={ariaSort("name")}>
               <button type="button" onClick={() => toggle("name")} className={sortBtn}>
-                Properti
+                {t.competitorTable.colProperty}
               </button>
             </th>
             <th scope="col" className={`${th} text-right`} aria-sort={ariaSort("distanceKm")}>
               <button type="button" onClick={() => toggle("distanceKm")} className={`${sortBtn} ml-auto`}>
-                Jarak
+                {t.competitorTable.colDistance}
               </button>
             </th>
             {SOURCE_LIST.map((s) => (
@@ -92,12 +94,12 @@ export function CompetitorTable({
             ))}
             <th scope="col" className={`${th} text-right`} aria-sort={ariaSort("median")}>
               <button type="button" onClick={() => toggle("median")} className={`${sortBtn} ml-auto`}>
-                Median
+                {t.competitorTable.colMedian}
               </button>
             </th>
             <th scope="col" className={`${th} text-right`} aria-sort={ariaSort("vsYou")}>
               <button type="button" onClick={() => toggle("vsYou")} className={`${sortBtn} ml-auto`}>
-                vs Anda
+                {t.competitorTable.colVsYou}
               </button>
             </th>
           </tr>
@@ -111,7 +113,7 @@ export function CompetitorTable({
             >
               {propertyName}
               <span className="ml-2 rounded bg-primary px-1.5 py-0.5 text-[10px] font-bold text-on-primary">
-                ANDA
+                {t.competitorTable.youTag}
               </span>
             </th>
             <td className="tnum px-3 py-2.5 text-right text-subtle-fg">—</td>
@@ -133,7 +135,7 @@ export function CompetitorTable({
                 {row.name}
                 <span className="tnum ml-2 text-xs font-normal text-subtle-fg">{row.stars}★</span>
               </th>
-              <td className="tnum px-3 py-2.5 text-right text-muted-fg">{row.distanceKm} km</td>
+              <td className="tnum px-3 py-2.5 text-right text-muted-fg">{t.competitorTable.km(row.distanceKm)}</td>
               {SOURCE_LIST.map((s) => {
                 const v = row.rates[s.id as SourceId];
                 return (

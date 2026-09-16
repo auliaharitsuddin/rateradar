@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { proSummary } from "@/lib/query";
 import { HOTELS } from "@/lib/seed";
 import { ProView } from "@/components/pro-view";
+import { ProNotFound } from "@/components/pro-not-found";
 
 const DEFAULT_ID = "bali-1";
 
@@ -20,11 +21,7 @@ export function ProClient() {
 
   const data = proSummary(id, 30);
   if (!data) {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="text-lg font-semibold text-foreground">Properti tidak ditemukan</h1>
-      </div>
-    );
+    return <ProNotFound />;
   }
 
   return <ProView id={id} data={data} />;

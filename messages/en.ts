@@ -184,6 +184,9 @@ const en: Messages = {
     showTable: "View table",
     dateCol: "Date",
   },
+  compareBars: {
+    cheapestBadge: "Cheapest",
+  },
   readme: {},
 };
 

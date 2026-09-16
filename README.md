@@ -63,9 +63,7 @@ competitor pricing and rate-parity breaches.
   `PropertyPicker`, `SearchForm`, `ResultsList`, `HotelCard`.
 - **Indonesian/English language toggle** (`lib/language.tsx`, `messages/`)
   in the header, persisted in `localStorage`. Covers the nav, footer, demo
-  banner, and the home page. The Search, Hotel detail, and Pro dashboard
-  pages don't read from it yet and still show Indonesian text regardless
-  of the toggle.
+  banner, home page, and the Search, Hotel detail, and Pro dashboard pages.
 
 ## Terminology
 
@@ -168,9 +166,7 @@ pemilik hotel untuk memantau harga kompetitor dan pelanggaran rate parity.
   `HotelCard`.
 - **Toggle bahasa Indonesia/Inggris** (`lib/language.tsx`, `messages/`) di
   header, tersimpan di `localStorage`. Mencakup nav, footer, banner demo,
-  dan halaman beranda. Halaman Search, Detail Hotel, dan dashboard Pro
-  belum membaca setting ini dan masih tampil dalam Bahasa Indonesia apa
-  pun pilihan togglenya.
+  halaman beranda, serta halaman Search, Detail Hotel, dan dashboard Pro.
 
 ## Istilah
 

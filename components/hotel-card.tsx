@@ -7,6 +7,7 @@ import { SOURCES, seriesVar } from "@/lib/sources";
 import { idr } from "@/lib/format";
 import { CompareBars } from "./charts/compare-bars";
 import { ExternalIcon, MapPinIcon, StarIcon } from "./icons";
+import { useLanguage } from "@/lib/language";
 
 /** Deterministic gradient stand-in — no network request, no layout shift, no broken image. */
 const GRADIENTS = [
@@ -20,6 +21,7 @@ const GRADIENTS = [
 
 export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights: number; index: number }) {
   const reduce = useReducedMotion();
+  const { t } = useLanguage();
   const { hotel, quotes, cheapest, spread } = offer;
   const gradient = GRADIENTS[Number(hotel.image.split("-")[1] ?? 1) - 1] ?? GRADIENTS[0];
 
@@ -70,7 +72,7 @@ export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights:
           </div>
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-subtle-fg">
-            <span className="flex items-center gap-1" aria-label={`${hotel.stars} bintang`}>
+            <span className="flex items-center gap-1" aria-label={t.hotelCard.starsAria(hotel.stars)}>
               {Array.from({ length: hotel.stars }).map((_, i) => (
                 <StarIcon key={i} size={12} className="text-accent" />
               ))}
@@ -79,7 +81,7 @@ export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights:
               <MapPinIcon size={13} />
               {hotel.area}
             </span>
-            <span className="tnum">{hotel.reviews.toLocaleString("id-ID")} ulasan</span>
+            <span className="tnum">{t.hotelCard.reviews(hotel.reviews.toLocaleString("id-ID"))}</span>
           </div>
 
           <ul className="mt-2.5 flex flex-wrap gap-1.5">
@@ -95,11 +97,16 @@ export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights:
 
           <div className="mt-4">
             <p className="mb-2 text-xs font-medium text-muted-fg">
-              Harga all-in per malam · {quotes.length} sumber
+              {t.hotelCard.priceHeader(quotes.length)}
             </p>
             <CompareBars
               items={items}
-              summary={`Perbandingan harga ${hotel.name} di ${quotes.length} OTA, termurah ${SOURCES[cheapest.sourceId].name} ${idr(cheapest.totalPerNight)} per malam.`}
+              summary={t.hotelCard.compareSummary(
+                hotel.name,
+                quotes.length,
+                SOURCES[cheapest.sourceId].name,
+                idr(cheapest.totalPerNight),
+              )}
             />
           </div>
         </div>
@@ -108,15 +115,15 @@ export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights:
         <div className="flex flex-col justify-center gap-2 border-t border-border bg-surface-2/50 p-4 lg:border-t-0">
           {spread > 0 && (
             <p className="text-xs font-semibold text-good">
-              Hemat {idr(spread)} vs sumber termahal
+              {t.hotelCard.saveVs(idr(spread))}
             </p>
           )}
-          <p className="text-xs text-subtle-fg">Termurah di {SOURCES[cheapest.sourceId].name}</p>
+          <p className="text-xs text-subtle-fg">{t.hotelCard.cheapestAt(SOURCES[cheapest.sourceId].name)}</p>
           <p className="tnum text-2xl font-bold leading-tight text-foreground">
             {idr(cheapest.totalPerNight)}
           </p>
           <p className="tnum text-xs text-subtle-fg">
-            Total {idr(cheapest.totalPerNight * nights)} · {nights} malam
+            {t.hotelCard.total(idr(cheapest.totalPerNight * nights), nights)}
           </p>
 
           <a
@@ -125,18 +132,18 @@ export function HotelCard({ offer, nights, index }: { offer: HotelOffer; nights:
             target="_blank"
             className="mt-1 flex h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary transition-colors duration-200 hover:bg-primary-hover cursor-pointer"
           >
-            Lihat di {SOURCES[cheapest.sourceId].name}
+            {t.hotelCard.viewAt(SOURCES[cheapest.sourceId].name)}
             <ExternalIcon size={15} />
           </a>
           <Link
             href={`/hotel/${hotel.id}`}
             className="flex h-11 items-center justify-center rounded-lg border border-border-strong px-4 text-sm font-medium text-foreground transition-colors duration-200 hover:bg-surface-2 cursor-pointer"
           >
-            Riwayat harga
+            {t.hotelCard.priceHistory}
           </Link>
           {cheapest.roomsLeft !== null && (
             <p className="text-center text-[11px] font-medium text-warning">
-              Tersisa {cheapest.roomsLeft} kamar
+              {t.hotelCard.roomsLeft(cheapest.roomsLeft)}
             </p>
           )}
         </div>

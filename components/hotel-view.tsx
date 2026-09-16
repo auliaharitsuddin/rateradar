@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { TrendChart, type TrendSeries } from "@/components/charts/trend-chart";
@@ -8,6 +10,7 @@ import { quoteFor, coveringSources } from "@/lib/pricing";
 import { SOURCES, seriesVar } from "@/lib/sources";
 import { idr, longDate } from "@/lib/format";
 import { ExternalIcon, MapPinIcon, StarIcon } from "@/components/icons";
+import { useLanguage } from "@/lib/language";
 import type { SourceId } from "@/lib/types";
 
 /**
@@ -16,7 +19,8 @@ import type { SourceId } from "@/lib/types";
  * pre-renders one file per hotel id at build time via generateStaticParams) —
  * the render logic is identical either way, only *when* it runs differs.
  */
-export async function HotelView({ id }: { id: string }) {
+export function HotelView({ id }: { id: string }) {
+  const { t } = useLanguage();
   const hotel = findHotel(id);
   if (!hotel) notFound();
 
@@ -51,11 +55,11 @@ export async function HotelView({ id }: { id: string }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-subtle-fg">
+      <nav aria-label={t.hotelView.breadcrumbAria} className="mb-4 text-sm text-subtle-fg">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
             <Link href="/" className="-my-2 inline-block py-2 hover:text-primary">
-              Beranda
+              {t.hotelView.home}
             </Link>
           </li>
           <li aria-hidden>/</li>
@@ -78,7 +82,7 @@ export async function HotelView({ id }: { id: string }) {
             {hotel.name}
           </h1>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-subtle-fg">
-            <span className="flex items-center gap-0.5" aria-label={`${hotel.stars} bintang`}>
+            <span className="flex items-center gap-0.5" aria-label={t.hotelView.starsAria(hotel.stars)}>
               {Array.from({ length: hotel.stars }).map((_, i) => (
                 <StarIcon key={i} size={13} className="text-accent" />
               ))}
@@ -88,7 +92,7 @@ export async function HotelView({ id }: { id: string }) {
               {hotel.area}, {hotel.city}
             </span>
             <span className="tnum">
-              {hotel.rating.toFixed(1)}/10 · {hotel.reviews.toLocaleString("id-ID")} ulasan
+              {t.hotelView.ratingReviews(hotel.rating.toFixed(1), hotel.reviews.toLocaleString("id-ID"))}
             </span>
           </div>
         </div>
@@ -98,54 +102,53 @@ export async function HotelView({ id }: { id: string }) {
           target="_blank"
           className="flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-on-primary transition-colors duration-200 hover:bg-primary-hover cursor-pointer"
         >
-          Pesan di {SOURCES[cheapest.sourceId].name} · {idr(cheapest.totalPerNight)}
+          {t.hotelView.bookAt(SOURCES[cheapest.sourceId].name, idr(cheapest.totalPerNight))}
           <ExternalIcon size={16} />
         </a>
       </header>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
-          label="Termurah hari ini"
+          label={t.hotelView.statCheapestToday}
           value={idr(cheapest.totalPerNight)}
           hint={SOURCES[cheapest.sourceId].name}
           index={0}
         />
         <StatTile
-          label="Rata-rata 30 hari"
+          label={t.hotelView.statAvg30}
           value={idr(average)}
           delta={vsAverage}
-          deltaLabel="harga hari ini vs rata-rata"
+          deltaLabel={t.hotelView.statAvgDeltaLabel}
           invertDelta
           index={1}
         />
-        <StatTile label="Terendah tercatat" value={idr(lowest)} hint="Dalam 30 hari terakhir" index={2} />
-        <StatTile label="Tertinggi tercatat" value={idr(highest)} hint="Dalam 30 hari terakhir" index={3} />
+        <StatTile label={t.hotelView.statLowest} value={idr(lowest)} hint={t.hotelView.last30Days} index={2} />
+        <StatTile label={t.hotelView.statHighest} value={idr(highest)} hint={t.hotelView.last30Days} index={3} />
       </div>
 
       {/* items-start: without it the grid stretches the shorter card and leaves
           a large empty band under the chart. */}
       <div className="mt-6 grid items-start gap-4 lg:grid-cols-[1.55fr_1fr]">
         <section className="min-w-0 rounded-2xl border border-border bg-surface p-4 sm:p-5">
-          <h2 className="text-base font-semibold text-foreground">Riwayat harga 30 hari</h2>
+          <h2 className="text-base font-semibold text-foreground">{t.hotelView.priceHistory30}</h2>
           <p className="mt-1 mb-4 text-sm text-muted-fg">
-            Harga all-in per malam untuk 1 kamar, 2 tamu. Celah pada garis berarti sumber tidak
-            mengembalikan harga hari itu.
+            {t.hotelView.priceHistoryBody}
           </p>
           <TrendChart
             dates={dates}
             series={series}
             height={340}
-            summary={`Riwayat harga ${hotel.name} selama 30 hari di ${series.length} OTA. Terendah ${idr(lowest)}, tertinggi ${idr(highest)}, rata-rata ${idr(average)}.`}
+            summary={t.hotelView.chartSummary(hotel.name, series.length, idr(lowest), idr(highest), idr(average))}
           />
         </section>
 
         <aside className="space-y-4">
           <section className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
             <h2 className="text-base font-semibold text-foreground">
-              Harga per OTA
+              {t.hotelView.pricePerOta}
             </h2>
             <p className="tnum mt-1 mb-4 text-sm text-muted-fg">
-              {longDate(checkIn)} · 1 malam
+              {t.hotelView.oneNight(longDate(checkIn))}
             </p>
             <CompareBars
               items={quotes.map((q) => ({
@@ -156,19 +159,21 @@ export async function HotelView({ id }: { id: string }) {
                 best: q.sourceId === cheapest.sourceId,
                 note: q.promoLabel ?? undefined,
               }))}
-              summary={`Perbandingan ${quotes.length} OTA untuk ${hotel.name}.`}
+              summary={t.hotelView.compareSummary(quotes.length, hotel.name)}
             />
             {dearest.totalPerNight > cheapest.totalPerNight && (
               <p className="mt-4 rounded-lg bg-good-soft px-3 py-2 text-xs font-medium text-good">
-                Memilih {SOURCES[cheapest.sourceId].name} menghemat{" "}
-                {idr(dearest.totalPerNight - cheapest.totalPerNight)} per malam dibanding{" "}
-                {SOURCES[dearest.sourceId].name}.
+                {t.hotelView.chooseSaves(
+                  SOURCES[cheapest.sourceId].name,
+                  idr(dearest.totalPerNight - cheapest.totalPerNight),
+                  SOURCES[dearest.sourceId].name,
+                )}
               </p>
             )}
           </section>
 
           <section className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
-            <h2 className="text-base font-semibold text-foreground">Rincian harga</h2>
+            <h2 className="text-base font-semibold text-foreground">{t.hotelView.priceBreakdown}</h2>
             <ul className="mt-3 space-y-2.5">
               {quotes.map((q) => (
                 <li key={q.sourceId} className="border-b border-border pb-2.5 last:border-0 last:pb-0">
@@ -186,13 +191,13 @@ export async function HotelView({ id }: { id: string }) {
                     </span>
                   </div>
                   <p className="tnum mt-1 text-xs text-subtle-fg">
-                    Tampil {idr(q.displayedPrice)}
+                    {t.hotelView.displayed(idr(q.displayedPrice))}
                     {SOURCES[q.sourceId].taxTreatment === "exclusive"
-                      ? ` + pajak & layanan ${idr(q.taxAndFees)}`
-                      : " (sudah termasuk pajak)"}
+                      ? t.hotelView.plusTax(idr(q.taxAndFees))
+                      : t.hotelView.taxIncluded}
                   </p>
                   <p className="mt-0.5 text-xs text-subtle-fg">
-                    {q.refundable ? "Bisa dibatalkan" : "Non-refundable"}
+                    {q.refundable ? t.hotelView.refundable : t.hotelView.nonRefundable}
                   </p>
                 </li>
               ))}

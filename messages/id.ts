@@ -183,6 +183,9 @@ const id = {
     showTable: "Lihat tabel",
     dateCol: "Tanggal",
   },
+  compareBars: {
+    cheapestBadge: "Termurah",
+  },
   readme: {},
 };
 
